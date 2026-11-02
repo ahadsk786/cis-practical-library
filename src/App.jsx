@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import "./App.css";
 
 const practicals = [
@@ -253,18 +253,34 @@ encrypt_file("example.txt")`,
 `# TOPIC 4: FILE INTEGRITY CHECKER
 
 import hashlib
+import os
 
 def get_fhash(filename):
     with open(filename, "rb") as f:
         return hashlib.sha256(f.read()).hexdigest()
 
-original_hash = get_fhash("example.txt")
-current_hash = get_fhash("example.txt")
+filename = "integrity_sample.txt"
+hash_file = "original_hash.txt"
 
-if original_hash == current_hash:
-    print("File is intact")
+if not os.path.exists(filename):
+    with open(filename, "w") as f:
+        f.write("Original important data")
+
+if not os.path.exists(hash_file):
+    original_hash = get_fhash(filename)
+    with open(hash_file, "w") as f:
+        f.write(original_hash)
+    print("Baseline hash saved. Modify the file and run again.")
 else:
-    print("File has been changed")`,
+    with open(hash_file, "r") as f:
+        original_hash = f.read().strip()
+
+    current_hash = get_fhash(filename)
+
+    if original_hash == current_hash:
+        print("File is intact")
+    else:
+        print("File has been changed!")`,
 
 `# TOPIC 5: BASIC IP FIREWALL SIMULATION
 
@@ -585,8 +601,8 @@ if cursor.fetchone() is None:
 username = input("Enter username: ")
 password = input("Enter password: ")
 
-query = f"SELECT * FROM users WHERE username='{username}' AND password='{password}'"
-cursor.execute(query)
+query = "SELECT * FROM users WHERE username=? AND password=?"
+cursor.execute(query, (username, password))
 
 result = cursor.fetchone()
 print(result)
@@ -883,7 +899,7 @@ print("Encrypted Data:", base64.b64encode(ciphertext).decode())
 
 cipher_dec = AES.new(key, AES.MODE_EAX, nonce=nonce)
 
-decrypted_data = cipher_dec.decrypt(ciphertext).decode()
+decrypted_data = cipher_dec.decrypt_and_verify(ciphertext, tag).decode()
 
 print("Decrypted Data:", decrypted_data)`,
 
@@ -1082,6 +1098,7 @@ print("HMAC:", hmac_digest)`,
 function App() {
   const [expanded, setExpanded] = useState(null);
   const [copied, setCopied] = useState("");
+  const [search, setSearch] = useState("");
 
   const togglePractical = (id) => {
     setExpanded(expanded === id ? null : id);
@@ -1097,72 +1114,151 @@ function App() {
     }
   };
 
+  // Filter practicals based on search
+  const filteredPracticals = useMemo(() => {
+    const query = search.trim().toLowerCase();
+
+    if (!query) return practicals;
+
+    return practicals
+      .map((practical) => {
+        const titleMatches = practical.title.toLowerCase().includes(query);
+
+        const matchingTopics = practical.topics
+          .map((topic, index) => ({
+            topic,
+            index,
+          }))
+          .filter(({ topic }) =>
+            topic.toLowerCase().includes(query)
+          );
+
+        if (titleMatches) {
+          return practical;
+        }
+
+        if (matchingTopics.length > 0) {
+          return {
+            ...practical,
+            topics: matchingTopics.map(({ topic }) => topic),
+            originalIndexes: matchingTopics.map(({ index }) => index),
+          };
+        }
+
+        return null;
+      })
+      .filter(Boolean);
+  }, [search]);
+
   return (
     <div className="app">
       <header className="header">
-        <h1>Google classroom link</h1>
-        <p>
-          FYBIO
-          <br />
-          NEUROLOGY
-        </p>
+        <h1>Fy Physics</h1>
+        <p>Google form</p>
       </header>
 
       <main className="container">
-        <h2>student list</h2>
+        <h2>Neurology</h2>
 
-        {practicals.map((practical) => (
-          <div className="practical-card" key={practical.id}>
-            <div
-              className="practical-header"
-              onClick={() => togglePractical(practical.id)}
+        {/* Search Bar */}
+        <div className="search-container">
+          <input
+            type="text"
+            placeholder="🔍 Search practicals, topics or programs..."
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setExpanded(null);
+            }}
+            className="search-input"
+          />
+
+          {search && (
+            <button
+              className="clear-search"
+              onClick={() => setSearch("")}
             >
-              <h3>{practical.title}</h3>
-              <span>{expanded === practical.id ? "−" : "+"}</span>
-            </div>
+              ✕
+            </button>
+          )}
+        </div>
 
-            {expanded === practical.id && (
-              <div className="topics">
-                {practical.topics.map((topic, index) => {
-                  let code = `# ${topic}\\n\\n# Code will be added here.`;
+        {/* Practical Cards */}
+        {filteredPracticals.length > 0 ? (
+          filteredPracticals.map((practical) => {
+            const isExpanded =
+              search.trim() !== "" ||
+              expanded === practical.id;
 
-                  if (practical.id === 1) code = practical1Codes[index];
-                  if (practical.id === 2) code = practical2Codes[index];
-                  if (practical.id === 3) code = practical3Codes[index];
-                  if (practical.id === 4) code = practical4Codes[index];
-                  if (practical.id === 6) code = practical6Codes[index];
-                  if (practical.id === 7) code = practical7Codes[index];
-                  if (practical.id === 8) code = practical8Codes[index];
+            return (
+              <div className="practical-card" key={practical.id}>
+                <div
+                  className="practical-header"
+                  onClick={() => togglePractical(practical.id)}
+                >
+                  <h3>{practical.title}</h3>
+                  <span>{isExpanded ? "−" : "+"}</span>
+                </div>
 
-                  const buttonName = `${practical.id}-${index}`;
+                {isExpanded && (
+                  <div className="topics">
+                    {practical.topics.map((topic, index) => {
+                      const originalIndex =
+                        practical.originalIndexes
+                          ? practical.originalIndexes[index]
+                          : index;
 
-                  return (
-                    <div className="topic-card" key={index}>
-                      <h4>
-                        {index + 1}. {topic}
-                      </h4>
+                      let code = `# ${topic}\n\n# Code will be added here.`;
 
-                      <button className="copy-btn" onClick={() => copyCode(code, buttonName)}>
-                        {copied === buttonName ? "Copied!" : "Copy Code"}
-                      </button>
+                      if (practical.id === 1) code = practical1Codes[originalIndex];
+                      if (practical.id === 2) code = practical2Codes[originalIndex];
+                      if (practical.id === 3) code = practical3Codes[originalIndex];
+                      if (practical.id === 4) code = practical4Codes[originalIndex];
+                      if (practical.id === 6) code = practical6Codes[originalIndex];
+                      if (practical.id === 7) code = practical7Codes[originalIndex];
+                      if (practical.id === 8) code = practical8Codes[originalIndex];
 
-                      <pre>
-                        <code>{code}</code>
-                      </pre>
-                    </div>
-                  );
-                })}
+                      const buttonName = `${practical.id}-${originalIndex}`;
+
+                      return (
+                        <div className="topic-card" key={originalIndex}>
+                          <h4>
+                            {originalIndex + 1}. {topic}
+                          </h4>
+
+                          <button
+                            className="copy-btn"
+                            onClick={() => copyCode(code, buttonName)}
+                          >
+                            {copied === buttonName
+                              ? "Copied!"
+                              : "Copy Code"}
+                          </button>
+
+                          <pre>
+                            <code>{code}</code>
+                          </pre>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
-            )}
+            );
+          })
+        ) : (
+          <div className="no-results">
+            <h3>No results found</h3>
+            <p>Try searching for another practical or topic.</p>
           </div>
-        ))}
+        )}
       </main>
 
       <footer>
-        <p>CIS Practical Code Library</p>
+        <p>Student data</p>
       </footer>
     </div>
   );
 }
 
-export default App;
+export default App; 

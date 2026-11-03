@@ -260,3 +260,27 @@ footer {
     font-size: 12px;
   }
 }
+/* COPY BUTTON IN PRACTICAL HEADER */
+.practical-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-shrink: 0;
+}
+
+.header-copy-btn {
+  margin: 0;
+  padding: 8px 14px;
+  font-size: 13px;
+}
+
+@media (max-width: 600px) {
+  .practical-header-actions {
+    gap: 8px;
+  }
+
+  .header-copy-btn {
+    padding: 7px 9px;
+    font-size: 11px;
+  }
+}

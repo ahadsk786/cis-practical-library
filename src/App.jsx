@@ -1112,7 +1112,19 @@ export default function App() {
                 <h3>Practical {practical.id} – {practical.title}</h3>
                 <small>{practical.category}</small>
               </div>
-              <span>{expanded === practical.id ? "−" : "+"}</span>
+              <div className="practical-header-actions">
+                <button
+                  className="copy-btn header-copy-btn"
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    copyCode(practical.id, practical.code);
+                  }}
+                >
+                  {copied === practical.id ? "Copied!" : copied === "error-" + practical.id ? "Copy failed" : "Copy Code"}
+                </button>
+                <span>{expanded === practical.id ? "−" : "+"}</span>
+              </div>
             </div>
 
             {expanded === practical.id && (
@@ -1123,13 +1135,6 @@ export default function App() {
                   {practical.install && <h4>Installation: <code>{practical.install}</code></h4>}
                   {practical.note && <h4>{practical.note}</h4>}
                   <h4>Python Code</h4>
-                  <button
-                    className="copy-btn"
-                    type="button"
-                    onClick={() => copyCode(practical.id, practical.code)}
-                  >
-                    {copied === practical.id ? "Copied!" : copied === "error-" + practical.id ? "Copy failed" : "Copy Code"}
-                  </button>
                   <pre><code>{practical.code}</code></pre>
                 </div>
               </div>

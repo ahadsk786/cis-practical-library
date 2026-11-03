@@ -1,1264 +1,1144 @@
-import { useState, useMemo } from "react";
+import { useMemo, useState } from "react";
 import "./App.css";
 
 const practicals = [
   {
     id: 1,
-    title: "Practical 1 – Security Goals",
-    topics: [
-      "Confidentiality – Fernet Encryption",
-      "Integrity – SHA-256 Hashing",
-      "Availability – File Backup",
-      "Authentication – Login System",
-      "Non-Repudiation – Signature Verification",
-      "Accountability – Audit Logging",
-    ],
+    title: "ANN for Linear Regression",
+    category: "Artificial Neural Networks",
+    aim: "Implement an Artificial Neural Network for linear regression using forward propagation, backpropagation and gradient descent.",
+    topics: ["Training dataset", "Weights and bias", "Forward propagation", "Backpropagation", "Gradient descent", "Mean Squared Error"],
+    install: "pip install numpy",
+    code: `import numpy as np
+
+# Training Dataset
+X = np.array([
+    [2, 3],
+    [3, 4],
+    [4, 5],
+    [5, 6],
+    [6, 7]
+], dtype=float)
+
+Y = np.array([[8], [11], [14], [17], [20]], dtype=float)
+
+# Initialize Weights and Bias
+W1 = 0.5
+W2 = 0.3
+b = 0.2
+
+learning_rate = 0.01
+epochs = 10000
+
+print("Initial Weights")
+print("W1 =", W1)
+print("W2 =", W2)
+print("Bias =", b)
+print("-" * 50)
+
+# Training Process
+for epoch in range(epochs):
+    total_error = 0
+
+    for i in range(len(X)):
+        x1 = X[i][0]
+        x2 = X[i][1]
+        target = Y[i][0]
+
+        # Forward Propagation
+        net = (x1 * W1) + (x2 * W2) + b
+        output = net
+
+        # Calculate Error
+        error = target - output
+        total_error += error ** 2
+
+        # Backpropagation
+        dW1 = -error * x1
+        dW2 = -error * x2
+        dB = -error
+
+        # Gradient Descent
+        W1 = W1 - learning_rate * dW1
+        W2 = W2 - learning_rate * dW2
+        b = b - learning_rate * dB
+
+    mse = total_error / len(X)
+
+    if epoch % 100 == 0:
+        print(f"Epoch {epoch:4d}   MSE = {mse:.6f}")
+
+    if mse < 0.00001:
+        print("\\nTraining Completed")
+        print("Epoch =", epoch)
+        break
+
+# Final Learned Parameters
+print("\\nFinal Parameters")
+print("W1 =", round(W1, 4))
+print("W2 =", round(W2, 4))
+print("Bias =", round(b, 4))
+
+# Testing / Prediction
+print("\\nPredictions")
+print("-" * 50)
+
+for i in range(len(X)):
+    x1 = X[i][0]
+    x2 = X[i][1]
+    predicted = (x1 * W1) + (x2 * W2) + b
+
+    print(
+        "Input =", X[i],
+        " Actual =", Y[i][0],
+        " Predicted =", round(predicted, 3),
+        " Error =", round(Y[i][0] - predicted, 5)
+    )`
   },
   {
     id: 2,
-    title: "Practical 2 – OS Security",
-    topics: [
-      "User Authentication – Password Hashing",
-      "Role-Based File Access",
-      "File Encryption using AES (Fernet)",
-      "File Integrity Checker",
-      "Basic IP Firewall Simulation",
-      "Activity Logging",
-      "Simulate Memory Allocation",
-      "Monitor Memory Usage",
-      "Garbage Collection",
-      "Paging Simulation",
-      "Memory Leak Simulation",
-      "Buffer Overflow Simulation",
-    ],
+    title: "Visualize Activation Functions",
+    category: "Artificial Neural Networks",
+    aim: "Visualize activation functions and compare their curves using Matplotlib.",
+    topics: ["Linear", "Binary Step", "Sigmoid", "Tanh", "ReLU", "Leaky ReLU", "PReLU", "RReLU", "ELU", "SELU", "Softplus", "Softsign", "Swish", "Mish", "GELU", "Hard Sigmoid", "Hard Swish", "Hard Tanh", "Gaussian", "ISRU"],
+    install: "pip install numpy matplotlib",
+    note: "This is the activation-functions visualization part of Practical 2. The Bayesian-Informed ANN section is intentionally excluded.",
+    code: `import numpy as np
+import matplotlib.pyplot as plt
+
+# Input values
+x = np.linspace(-5, 5, 500)
+
+def linear(x):
+    return x
+
+def binary_step(x):
+    return np.where(x >= 0, 1, 0)
+
+def sigmoid(x):
+    return 1 / (1 + np.exp(-x))
+
+def tanh(x):
+    return np.tanh(x)
+
+def relu(x):
+    return np.maximum(0, x)
+
+def leaky_relu(x, alpha=0.1):
+    return np.where(x > 0, x, alpha * x)
+
+def prelu(x, alpha=0.25):
+    return np.where(x > 0, x, alpha * x)
+
+def rrelu(x):
+    alpha = 0.2
+    return np.where(x > 0, x, alpha * x)
+
+def elu(x, alpha=1):
+    return np.where(x > 0, x, alpha * (np.exp(x) - 1))
+
+def selu(x):
+    alpha = 1.67326
+    scale = 1.0507
+    return scale * np.where(x > 0, x, alpha * (np.exp(x) - 1))
+
+def softplus(x):
+    return np.log1p(np.exp(x))
+
+def softsign(x):
+    return x / (1 + np.abs(x))
+
+def swish(x):
+    return x * sigmoid(x)
+
+def mish(x):
+    return x * np.tanh(np.log1p(np.exp(x)))
+
+def gelu(x):
+    return 0.5 * x * (1 + np.tanh(
+        np.sqrt(2 / np.pi) * (x + 0.044715 * x**3)
+    ))
+
+def hard_sigmoid(x):
+    return np.clip(0.2 * x + 0.5, 0, 1)
+
+def hard_swish(x):
+    return x * np.clip((x + 3) / 6, 0, 1)
+
+def hard_tanh(x):
+    return np.clip(x, -1, 1)
+
+def gaussian(x):
+    return np.exp(-(x**2))
+
+def isru(x, alpha=1):
+    return x / np.sqrt(1 + alpha * x**2)
+
+functions = {
+    "Linear": (linear(x), "f(x)=x"),
+    "Binary Step": (binary_step(x), "0 if x<0, 1 if x>=0"),
+    "Sigmoid": (sigmoid(x), "1/(1+e^-x)"),
+    "Tanh": (tanh(x), "tanh(x)"),
+    "ReLU": (relu(x), "max(0,x)"),
+    "Leaky ReLU": (leaky_relu(x), "max(0.1x,x)"),
+    "PReLU": (prelu(x), "max(alpha*x,x)"),
+    "RReLU": (rrelu(x), "Random alpha"),
+    "ELU": (elu(x), "x if x>0, alpha(e^x-1)"),
+    "SELU": (selu(x), "Scaled ELU"),
+    "Softplus": (softplus(x), "ln(1+e^x)"),
+    "Softsign": (softsign(x), "x/(1+|x|)"),
+    "Swish": (swish(x), "x*sigmoid(x)"),
+    "Mish": (mish(x), "x*tanh(softplus)"),
+    "GELU": (gelu(x), "Approximate GELU"),
+    "Hard Sigmoid": (hard_sigmoid(x), "clip(0.2x+0.5)"),
+    "Hard Swish": (hard_swish(x), "x*HardSigmoid"),
+    "Hard Tanh": (hard_tanh(x), "clip(-1,1)"),
+    "Gaussian": (gaussian(x), "e^(-x^2)"),
+    "ISRU": (isru(x), "x/sqrt(1+x^2)")
+}
+
+plt.figure(figsize=(16, 12))
+
+for i, (name, (y, formula)) in enumerate(functions.items(), 1):
+    plt.subplot(5, 4, i)
+    plt.plot(x, y)
+    plt.title(name)
+    plt.grid(True)
+
+plt.tight_layout()
+plt.show()`
   },
   {
     id: 3,
-    title: "Practical 3 – Public Key Cryptography (RSA)",
-    topics: [
-      "Generate Sender and Receiver Keys",
-      "Sender Encryption and Signing",
-      "Receiver Decryption and Verification",
-    ],
+    title: "Unsupervised Neural Networks – SOM",
+    category: "Unsupervised Learning",
+    aim: "Implement a Self Organizing Map on the Iris dataset and compare SOM with K-Means clustering.",
+    topics: ["MiniSom", "Iris dataset", "Min-Max scaling", "U-Matrix", "Winning neurons", "Quantization error", "Topographic error", "K-Means comparison"],
+    install: "pip install minisom numpy matplotlib scikit-learn",
+    code: `from minisom import MiniSom
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn import datasets
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.cluster import KMeans
+from sklearn.metrics import silhouette_score, davies_bouldin_score
+
+# Load Iris Dataset
+iris = datasets.load_iris()
+data = iris.data
+target = iris.target
+
+# Normalize the data
+data = MinMaxScaler().fit_transform(data)
+
+labels_iris = {
+    0: "Setosa",
+    1: "Versicolor",
+    2: "Virginica"
+}
+
+# SOM Parameters
+SOM_X = 8
+SOM_Y = 8
+INPUT_LEN = data.shape[1]
+ALPHA = 0.5
+SIGMA = 1.5
+NEIGHBORHOOD = "triangle"
+DISTANCE = "euclidean"
+TOPOLOGY = "rectangular"
+RANDOM_SEED = 123
+
+# Create SOM
+som = MiniSom(
+    x=SOM_X,
+    y=SOM_Y,
+    input_len=INPUT_LEN,
+    sigma=SIGMA,
+    learning_rate=ALPHA,
+    neighborhood_function=NEIGHBORHOOD,
+    activation_distance=DISTANCE,
+    topology=TOPOLOGY,
+    random_seed=RANDOM_SEED
+)
+
+# Initialize weights using PCA
+som.pca_weights_init(data)
+
+# Train SOM
+N_ITERATIONS = 5000
+print("Training SOM...")
+som.train_random(data, N_ITERATIONS, verbose=False)
+
+print("\\nTraining Completed!")
+print("Quantization Error:", som.quantization_error(data))
+print("Topographic Error:", som.topographic_error(data))
+
+# U-Matrix
+plt.figure(figsize=(8, 8))
+plt.title("SOM U-Matrix")
+plt.pcolor(som.distance_map().T, cmap="gist_yarg")
+plt.colorbar(label="Distance")
+plt.show()
+
+# U-Matrix with Winning Neurons
+plt.figure(figsize=(8, 8))
+plt.title("Winning Neurons")
+plt.pcolor(som.distance_map().T, cmap="gist_yarg")
+plt.colorbar()
+
+markers = ["o", "s", "^"]
+colors = ["red", "green", "blue"]
+
+for i, x in enumerate(data):
+    winner = som.winner(x)
+    plt.plot(
+        winner[0] + 0.5,
+        winner[1] + 0.5,
+        markers[target[i]],
+        markerfacecolor="None",
+        markeredgecolor=colors[target[i]],
+        markersize=12,
+        markeredgewidth=2
+    )
+
+plt.grid(True)
+plt.show()
+
+# Scatter Plot of Winning Neurons
+w_x, w_y = zip(*[som.winner(d) for d in data])
+w_x = np.array(w_x)
+w_y = np.array(w_y)
+
+plt.figure(figsize=(8, 8))
+plt.title("Scatter Plot of Winning Neurons")
+plt.pcolor(som.distance_map().T, cmap="gist_yarg", alpha=0.25)
+plt.colorbar()
+
+for c in np.unique(target):
+    idx = target == c
+    plt.scatter(
+        w_x[idx] + 0.5 + (np.random.rand(np.sum(idx)) - 0.5) * 0.6,
+        w_y[idx] + 0.5 + (np.random.rand(np.sum(idx)) - 0.5) * 0.6,
+        s=60,
+        color=colors[c],
+        label=labels_iris[c]
+    )
+
+plt.legend()
+plt.grid(True)
+plt.show()
+
+# K-Means comparison
+kmeans = KMeans(n_clusters=3, random_state=123, n_init=10)
+kmeans_labels = kmeans.fit_predict(data)
+
+print("\\nK-Means Silhouette Score:", silhouette_score(data, kmeans_labels))
+print("K-Means Davies-Bouldin Score:", davies_bouldin_score(data, kmeans_labels))
+
+plt.figure(figsize=(7, 5))
+plt.scatter(data[:, 0], data[:, 1], c=kmeans_labels)
+plt.title("K-Means Clustering on Iris Dataset")
+plt.xlabel("Feature 1")
+plt.ylabel("Feature 2")
+plt.show()`,
+    note: "The journal includes the SOM-on-Iris implementation and a separate SOM/K-Means comparison task. The code above keeps the core SOM workflow and adds a basic K-Means comparison view."
   },
   {
     id: 4,
-    title: "Practical 4 – Database Security",
-    topics: [
-      "SQL Injection and Prevention",
-      "Password Hashing using bcrypt",
-      "Role-Based Access Control",
-      "Encrypted Data Storage",
-    ],
+    title: "Reinforcement Learning – Q-Learning",
+    category: "Reinforcement Learning",
+    aim: "Implement Q-Learning on the FrozenLake environment using a Q-table, epsilon-greedy action selection and reward-based updates.",
+    topics: ["FrozenLake", "Q-table", "Learning rate", "Discount factor", "Epsilon-greedy", "Exploration and exploitation", "Multiple map levels"],
+    install: "pip install gymnasium numpy",
+    code: `import gymnasium as gym
+import numpy as np
+import random
+
+# FrozenLake map (Level 1)
+desc = [
+    "SFFF",
+    "FFFF",
+    "FFHF",
+    "FFFG"
+]
+
+env = gym.make(
+    "FrozenLake-v1",
+    desc=desc,
+    is_slippery=False
+)
+
+states = env.observation_space.n
+actions = env.action_space.n
+
+Q = np.zeros((states, actions))
+
+learning_rate = 0.8
+gamma = 0.95
+epsilon = 1.0
+epsilon_decay = 0.001
+min_epsilon = 0.01
+
+episodes = 2000
+max_steps = 100
+rewards = []
+
+for ep in range(episodes):
+    state, _ = env.reset()
+    total_reward = 0
+
+    for step in range(max_steps):
+        # Epsilon-greedy action selection
+        if random.uniform(0, 1) < epsilon:
+            action = env.action_space.sample()
+        else:
+            action = np.argmax(Q[state])
+
+        next_state, reward, terminated, truncated, _ = env.step(action)
+        done = terminated or truncated
+
+        # Q-Learning update
+        Q[state, action] += learning_rate * (
+            reward + gamma * np.max(Q[next_state]) - Q[state, action]
+        )
+
+        state = next_state
+        total_reward += reward
+
+        if done:
+            break
+
+    epsilon = max(min_epsilon, np.exp(-epsilon_decay * ep))
+    rewards.append(total_reward)
+
+print("Training Complete!\\n")
+print("Q-Table:")
+print(Q)
+print("\\nAverage Reward:", np.mean(rewards))
+
+env.close()`
+  },
+  {
+    id: 5,
+    title: "Reinforcement Learning with SARSA",
+    category: "Reinforcement Learning",
+    aim: "Implement the SARSA (State–Action–Reward–State–Action) on-policy temporal-difference algorithm on FrozenLake.",
+    topics: ["SARSA", "FrozenLake", "On-policy learning", "Q-table", "Epsilon-greedy", "Temporal-difference update"],
+    install: "pip install gymnasium numpy",
+    code: `import gymnasium as gym
+import numpy as np
+import random
+
+env = gym.make("FrozenLake-v1", is_slippery=False)
+
+states = env.observation_space.n
+actions = env.action_space.n
+
+Q = np.zeros((states, actions))
+
+alpha = 0.8
+gamma = 0.95
+epsilon = 1.0
+epsilon_decay = 0.995
+min_epsilon = 0.01
+episodes = 2000
+
+def choose_action(state):
+    if random.random() < epsilon:
+        return env.action_space.sample()
+    return np.argmax(Q[state])
+
+for episode in range(episodes):
+    state, _ = env.reset()
+    action = choose_action(state)
+
+    for step in range(100):
+        next_state, reward, terminated, truncated, _ = env.step(action)
+        done = terminated or truncated
+
+        if done:
+            target = reward
+        else:
+            next_action = choose_action(next_state)
+            target = reward + gamma * Q[next_state, next_action]
+
+        Q[state, action] += alpha * (target - Q[state, action])
+
+        if done:
+            break
+
+        state = next_state
+        action = next_action
+
+    epsilon = max(min_epsilon, epsilon * epsilon_decay)
+
+print("Training Complete")
+print("SARSA Q-Table:")
+print(Q)
+
+env.close()`
   },
   {
     id: 6,
-    title: "Practical 6 – Cloud Security",
-    topics: [
-      "Time-Limited Secure File Access",
-      "Client-Side Encrypted Cloud Backup",
-      "Intrusion Detection System for Cloud Logs",
-      "Invisible Watermarking",
-    ],
+    title: "Reinforcement Learning with Neural Networks – DQN",
+    category: "Reinforcement Learning",
+    aim: "Implement a Deep Q-Network that uses a neural network to approximate Q-values for the CartPole environment.",
+    topics: ["Deep Q-Network", "CartPole", "Experience replay", "Neural network", "Epsilon-greedy", "Q-value approximation"],
+    install: "pip install gymnasium numpy tensorflow",
+    code: `import gymnasium as gym
+import numpy as np
+import random
+from collections import deque
+import tensorflow as tf
+from tensorflow.keras import Sequential
+from tensorflow.keras.layers import Dense
+from tensorflow.keras.optimizers import Adam
+
+env = gym.make("CartPole-v1")
+
+state_size = env.observation_space.shape[0]
+action_size = env.action_space.n
+
+model = Sequential([
+    Dense(24, activation="relu", input_shape=(state_size,)),
+    Dense(24, activation="relu"),
+    Dense(action_size, activation="linear")
+])
+
+model.compile(optimizer=Adam(learning_rate=0.001), loss="mse")
+
+memory = deque(maxlen=2000)
+gamma = 0.95
+epsilon = 1.0
+epsilon_min = 0.01
+epsilon_decay = 0.995
+batch_size = 32
+episodes = 50
+
+for episode in range(episodes):
+    state, _ = env.reset()
+    state = np.reshape(state, [1, state_size])
+    total_reward = 0
+
+    for step in range(500):
+        if random.random() <= epsilon:
+            action = env.action_space.sample()
+        else:
+            action = np.argmax(model.predict(state, verbose=0)[0])
+
+        next_state, reward, terminated, truncated, _ = env.step(action)
+        done = terminated or truncated
+        next_state = np.reshape(next_state, [1, state_size])
+
+        memory.append((state, action, reward, next_state, done))
+        state = next_state
+        total_reward += reward
+
+        if done:
+            break
+
+        if len(memory) >= batch_size:
+            batch = random.sample(memory, batch_size)
+
+            for s, a, r, ns, d in batch:
+                target = r if d else r + gamma * np.max(model.predict(ns, verbose=0)[0])
+                target_f = model.predict(s, verbose=0)
+                target_f[0][a] = target
+                model.fit(s, target_f, epochs=1, verbose=0)
+
+    epsilon = max(epsilon_min, epsilon * epsilon_decay)
+    print("Episode:", episode + 1, "Reward:", total_reward)
+
+env.close()`
   },
   {
     id: 7,
-    title: "Practical 7 – IoT Security",
-    topics: [
-      "AES Encryption for IoT Sensor Data",
-      "HMAC for Data Integrity",
-      "MQTT Communication with TLS",
-      "Packet Sniffing in IoT Traffic",
-    ],
+    title: "Radial Basis Function Neural Network",
+    category: "Artificial Neural Networks",
+    aim: "Implement an RBF Neural Network for solving XOR classification using Gaussian basis functions and determine output weights.",
+    topics: ["RBF network", "XOR", "Gaussian basis function", "Centers", "Sigma", "Hidden layer", "Pseudo-inverse weights"],
+    install: "pip install numpy",
+    code: `import numpy as np
+
+# Input
+x = np.array([1, 0])  # Change input here
+
+# Centers
+C = np.array([
+    [0, 0],
+    [0, 1],
+    [1, 0],
+    [1, 1]
+])
+
+# Output Weights
+# W = np.array([-0.8, 0.9, 0.9, -0.8])
+W = np.array([-3.0359, 3.4233, 3.4233, -3.0359])
+
+# Sigma
+sigma = 1.0
+
+# Distance Squared
+d = np.sum((x - C) ** 2, axis=1)
+
+# Gaussian RBF Hidden Layer
+H = np.exp(-d / (2 * sigma ** 2))
+
+# Network Output
+Y = np.sum(H * W)
+
+print("Input :", x)
+print("Distance^2 :", d)
+print("Hidden Layer Outputs :", np.round(H, 3))
+print("Network Output :", round(Y, 4))
+
+# XOR Output
+if Y > 0:
+    print("XOR Output = 1")
+else:
+    print("XOR Output = 0")
+
+# Determine how weights are calculated
+X = np.array([
+    [0, 0],
+    [0, 1],
+    [1, 0],
+    [1, 1]
+])
+
+T = np.array([0, 1, 1, 0])
+sigma = 1.0
+C = X.copy()
+
+# Hidden matrix
+H = []
+
+for x in X:
+    d = np.sum((x - C) ** 2, axis=1)
+    h = np.exp(-d / (2 * sigma ** 2))
+    H.append(h)
+
+H = np.array(H)
+
+# Learn output weights
+W = np.linalg.pinv(H) @ T
+
+print("Hidden Matrix:\\n", np.round(H, 3))
+print("Weights:", np.round(W, 4))`
   },
   {
     id: 8,
-    title: "Practical 8 – Hashing, Collision and HMAC",
-    topics: [
-      "Toy Hash Collision Demonstration",
-      "SHA-256 Hash and Avalanche Effect",
-      "MAC / HMAC Example",
-      "Another HMAC Example",
-    ],
+    title: "Genetic Algorithms – I",
+    category: "Genetic Algorithms",
+    aim: "Design and visualize a Genetic Algorithm that evolves a random population of strings until it matches the target string FYBSC.",
+    topics: ["Population", "Chromosome", "Fitness function", "Roulette wheel selection", "Single-point crossover", "Guided mutation", "Elitism", "Generation visualization"],
+    install: "pip install matplotlib",
+    code: `import random
+import string
+import matplotlib.pyplot as plt
+
+TARGET = "FYBSC"
+GENES = string.ascii_uppercase
+
+POPULATION_SIZE = 20
+MUTATION_RATE = 0.10
+MAX_GENERATIONS = 500
+
+def create_chromosome():
+    return ''.join(random.choice(GENES) for _ in range(len(TARGET)))
+
+def fitness(chromosome):
+    score = 0
+
+    for i in range(len(TARGET)):
+        if chromosome[i] == TARGET[i]:
+            score += 2
+
+    for ch in chromosome:
+        if ch in TARGET:
+            score += 1
+
+    return score
+
+def roulette_selection(population, fitness_scores):
+    total = sum(fitness_scores)
+
+    if total == 0:
+        return random.choice(population)
+
+    r = random.uniform(0, total)
+    upto = 0
+
+    for chrom, fit in zip(population, fitness_scores):
+        upto += fit
+        if upto >= r:
+            return chrom
+
+    return population[-1]
+
+def crossover(p1, p2):
+    point = random.randint(1, len(TARGET) - 1)
+    return p1[:point] + p2[point:], p2[:point] + p1[point:]
+
+def mutate(child):
+    child = list(child)
+
+    for i in range(len(child)):
+        if random.random() < MUTATION_RATE:
+            if random.random() < 0.7:
+                child[i] = TARGET[i]
+            else:
+                child[i] = random.choice(GENES)
+
+    return ''.join(child)
+
+# Initial population
+population = [create_chromosome() for _ in range(POPULATION_SIZE)]
+
+plt.ion()
+for generation in range(MAX_GENERATIONS):
+    scores = [fitness(chrom) for chrom in population]
+    best = max(population, key=fitness)
+
+    print("\\nGeneration:", generation + 1)
+    for chrom, score in zip(population, scores):
+        print(chrom, "Fitness:", score)
+
+    if best == TARGET:
+        print("Target found:", best)
+        break
+
+    # Elitism
+    new_population = [best]
+
+    while len(new_population) < POPULATION_SIZE:
+        p1 = roulette_selection(population, scores)
+        p2 = roulette_selection(population, scores)
+
+        child1, child2 = crossover(p1, p2)
+        new_population.append(mutate(child1))
+
+        if len(new_population) < POPULATION_SIZE:
+            new_population.append(mutate(child2))
+
+    population = new_population
+
+    # Fitness pie chart
+    plt.clf()
+    plt.pie([max(1, s) for s in scores])
+    plt.title("Generation " + str(generation + 1))
+    plt.pause(0.1)
+
+plt.ioff()
+plt.show()`,
+    note: "The journal describes an animated pie chart and the roulette-wheel GA. This is a compact runnable version of that workflow."
   },
-];
-
-const practical1Codes = [
-`# TOPIC 1: CONFIDENTIALITY - FERNET ENCRYPTION
-
-from cryptography.fernet import Fernet
-
-key = Fernet.generate_key()
-cipher = Fernet(key)
-
-message = "Top Secret Message!"
-
-encrypted = cipher.encrypt(message.encode())
-decrypted = cipher.decrypt(encrypted).decode()
-
-print("Key:", key.decode())
-print("Encrypted:", encrypted)
-print("Decrypted:", decrypted)`,
-
-`# TOPIC 2: INTEGRITY - SHA-256 HASHING
-
-import hashlib
-
-data = "This is important"
-
-hash1 = hashlib.sha256(data.encode()).hexdigest()
-
-tampered = "This is IMPORTANT"
-hash2 = hashlib.sha256(tampered.encode()).hexdigest()
-
-print("Hash1:", hash1)
-print("Hash2:", hash2)
-print("Integrity Verified?", hash1 == hash2)`,
-
-`# TOPIC 3: AVAILABILITY - FILE BACKUP
-
-import shutil
-
-with open("data.txt", "w") as f:
-    f.write("This is some important data.")
-
-original_file = "data.txt"
-backup_file = "backup_data.txt"
-
-shutil.copyfile(original_file, backup_file)
-
-print("Backup completed!")`,
-
-`# TOPIC 4: AUTHENTICATION - LOGIN SYSTEM
-
-users = {
-    "admin": "Manasvi21",
-    "user1": "123"
-}
-
-username = input("Enter username: ")
-password = input("Enter password: ")
-
-if users.get(username) == password:
-    print("Access granted")
-else:
-    print("Access denied")`,
-
-`# TOPIC 5: NON-REPUDIATION - SIGNATURE VERIFICATION
-
-import hashlib
-
-message = "Approve $5000 transfer"
-
-signature = hashlib.sha256(message.encode()).hexdigest()
-
-received_message = "Approve $5000 transfer"
-
-received_signature = hashlib.sha256(
-    received_message.encode()
-).hexdigest()
-
-print("Signature Verified:", signature == received_signature)`,
-
-`# TOPIC 6: ACCOUNTABILITY - AUDIT LOGGING
-
-import datetime
-
-def log_action(user, action):
-    timestamp = datetime.datetime.now()
-
-    with open("audit_log.txt", "a") as log:
-        log.write(f"{timestamp} - {user}: {action}\\n")
-
-    print(f"{timestamp} - {user}: {action}")
-
-log_action("admin", "Logged In")
-log_action("user1", "Viewed Report")`,
-];
-
-const practical2Codes = [
-`# TOPIC 1: USER AUTHENTICATION - PASSWORD HASHING
-
-import hashlib
-
-users = {}
-
-def hash_pass(password):
-    return hashlib.sha256(password.encode()).hexdigest()
-
-def register(username, password):
-    users[username] = hash_pass(password)
-    print("Registered Successfully!")
-
-def login(username, password):
-    if users.get(username) == hash_pass(password):
-        print("Access Granted!")
-    else:
-        print("Access Denied!")
-
-register("admin", "securepass")
-login("admin", "securepass")
-login("admin", "wrongpass")`,
-
-`# TOPIC 2: ROLE-BASED FILE ACCESS
-
-permissions = {
-    "admin": ["read", "write"],
-    "guest": ["read"]
-}
-
-def access_file(role, action):
-    if action in permissions.get(role, []):
-        print(f"{role} can {action} the file")
-    else:
-        print(f"{role} cannot {action} the file")
-
-access_file("admin", "write")
-access_file("guest", "write")`,
-
-`# TOPIC 3: FILE ENCRYPTION USING AES (FERNET)
-
-from cryptography.fernet import Fernet
-import os
-
-print("========== FILE ENCRYPTION ==========")
-
-if not os.path.exists("example.txt"):
-    with open("example.txt", "w") as f:
-        f.write("This is a sample file for encryption.")
-
-key = Fernet.generate_key()
-
-with open("filekey.key", "wb") as filekey:
-    filekey.write(key)
-
-def encrypt_file(filename):
-    with open("filekey.key", "rb") as filekey:
-        key = filekey.read()
-
-    fernet = Fernet(key)
-
-    with open(filename, "rb") as file:
-        data = file.read()
-
-    encrypted = fernet.encrypt(data)
-
-    with open(filename, "wb") as file:
-        file.write(encrypted)
-
-    print("File Encrypted Successfully!")
-
-encrypt_file("example.txt")`,
-
-`# TOPIC 4: FILE INTEGRITY CHECKER
-
-import hashlib
-import os
-
-def get_fhash(filename):
-    with open(filename, "rb") as f:
-        return hashlib.sha256(f.read()).hexdigest()
-
-filename = "integrity_sample.txt"
-hash_file = "original_hash.txt"
-
-if not os.path.exists(filename):
-    with open(filename, "w") as f:
-        f.write("Original important data")
-
-if not os.path.exists(hash_file):
-    original_hash = get_fhash(filename)
-    with open(hash_file, "w") as f:
-        f.write(original_hash)
-    print("Baseline hash saved. Modify the file and run again.")
-else:
-    with open(hash_file, "r") as f:
-        original_hash = f.read().strip()
-
-    current_hash = get_fhash(filename)
-
-    if original_hash == current_hash:
-        print("File is intact")
-    else:
-        print("File has been changed!")`,
-
-`# TOPIC 5: BASIC IP FIREWALL SIMULATION
-
-blocked_ips = [
-    "192.168.1.100",
-    "10.0.0.5"
-]
-
-def check_access(ip):
-    if ip in blocked_ips:
-        print(f"Access Denied for {ip}")
-    else:
-        print(f"Access Granted for {ip}")
-
-check_access("192.168.1.100")
-check_access("8.8.8.8")`,
-
-`# TOPIC 6: ACTIVITY LOGGING
-
-import datetime
-
-def log_activity(user, action):
-    with open("access_log.txt", "a") as logfile:
-        current_time = datetime.datetime.now().strftime(
-            "%Y-%m-%d %H:%M:%S"
-        )
-        logfile.write(
-            f"[{current_time}] {user} -> {action}\\n"
-        )
-
-log_activity("admin", "Accessed settings")
-log_activity("guest", "Tried to delete files")
-
-print("Activities Logged Successfully!")
-print("Check access_log.txt file.")`,
-
-`# TOPIC 7: SIMULATE MEMORY ALLOCATION
-
-memory = [None] * 100
-
-def allocate(process_id, size):
-    for i in range(len(memory) - size + 1):
-        if all(block is None for block in memory[i:i + size]):
-            for j in range(i, i + size):
-                memory[j] = process_id
-            return f"Allocated {size} blocks to {process_id} at position {i}"
-
-    return "No sufficient memory"
-
-def deallocate(process_id):
-    count = memory.count(process_id)
-
-    for i in range(len(memory)):
-        if memory[i] == process_id:
-            memory[i] = None
-
-    return f"Deallocated {count} blocks from {process_id}"
-
-print(allocate("P1", 10))
-print(allocate("P2", 20))
-print(deallocate("P1"))`,
-
-`# TOPIC 8: MONITOR MEMORY USAGE
-
-import os
-import psutil
-
-process = psutil.Process(os.getpid())
-
-print(
-    f"Current Memory Usage: "
-    f"{process.memory_info().rss / (1024 ** 2):.2f} MB"
-)`,
-
-`# TOPIC 9: GARBAGE COLLECTION
-
-import gc
-import sys
-
-a = [1] * (10 ** 6)
-
-print("Memory used:", sys.getsizeof(a), "bytes")
-
-del a
-gc.collect()
-
-print("Garbage collected")`,
-
-`# TOPIC 10: PAGING SIMULATION
-
-import math
-
-def paging_simulator(process_size, page_size):
-    num_pages = math.ceil(process_size / page_size)
-
-    page_table = {
-        f"Page {i}": f"Frame {i}"
-        for i in range(num_pages)
-    }
-
-    return page_table
-
-table = paging_simulator(1024, 256)
-
-for page, frame in table.items():
-    print(f"{page} -> {frame}")`,
-
-`# TOPIC 11: MEMORY LEAK SIMULATION
-
-import tracemalloc
-
-tracemalloc.start()
-
-def leak_memory():
-    leaky_list = []
-
-    for _ in range(100000):
-        leaky_list.append("leak" * 1000)
-
-    return leaky_list
-
-leak_memory()
-
-snapshot = tracemalloc.take_snapshot()
-top_stats = snapshot.statistics("lineno")
-
-print("Memory Leak Detected at:")
-
-for stat in top_stats[:3]:
-    print(stat)`,
-
-`# TOPIC 12: BUFFER OVERFLOW SIMULATION
-
-def safe_array_write(array, index, value):
-    if index < len(array):
-        array[index] = value
-        return "Value written"
-    else:
-        return "Buffer Overflow Attempt!"
-
-arr = [0] * 5
-
-print(safe_array_write(arr, 2, 10))
-print(safe_array_write(arr, 10, 10))`,
-];
-
-const practical3Codes = [
-`# PRACTICAL 3: GENERATE SENDER AND RECEIVER RSA KEYS
-
-from cryptography.hazmat.primitives.asymmetric import rsa
-from cryptography.hazmat.primitives import serialization
-
-sender_private = rsa.generate_private_key(
-    public_exponent=65537,
-    key_size=2048
-)
-sender_public = sender_private.public_key()
-
-with open("sender_private_key.pem", "wb") as f:
-    f.write(sender_private.private_bytes(
-        encoding=serialization.Encoding.PEM,
-        format=serialization.PrivateFormat.TraditionalOpenSSL,
-        encryption_algorithm=serialization.NoEncryption()
-    ))
-
-with open("sender_public_key.pem", "wb") as f:
-    f.write(sender_public.public_bytes(
-        encoding=serialization.Encoding.PEM,
-        format=serialization.PublicFormat.SubjectPublicKeyInfo
-    ))
-
-receiver_private = rsa.generate_private_key(
-    public_exponent=65537,
-    key_size=2048
-)
-receiver_public = receiver_private.public_key()
-
-with open("receiver_private_key.pem", "wb") as f:
-    f.write(receiver_private.private_bytes(
-        encoding=serialization.Encoding.PEM,
-        format=serialization.PrivateFormat.TraditionalOpenSSL,
-        encryption_algorithm=serialization.NoEncryption()
-    ))
-
-with open("receiver_public_key.pem", "wb") as f:
-    f.write(receiver_public.public_bytes(
-        encoding=serialization.Encoding.PEM,
-        format=serialization.PublicFormat.SubjectPublicKeyInfo
-    ))
-
-print("All RSA keys generated and saved successfully!")`,
-
-`# PRACTICAL 3: SENDER ENCRYPTION AND SIGNING
-
-from cryptography.hazmat.primitives import hashes, serialization
-from cryptography.hazmat.primitives.asymmetric import padding
-
-with open("receiver_public_key.pem", "rb") as f:
-    receiver_public_key = serialization.load_pem_public_key(f.read())
-
-with open("sender_private_key.pem", "rb") as f:
-    sender_private_key = serialization.load_pem_private_key(
-        f.read(), password=None
-    )
-
-user_input = input("Enter the message you want to encrypt and sign: ")
-message = user_input.encode("utf-8")
-
-encrypted_message = receiver_public_key.encrypt(
-    message,
-    padding.OAEP(
-        mgf=padding.MGF1(algorithm=hashes.SHA256()),
-        algorithm=hashes.SHA256(),
-        label=None
-    )
-)
-
-signature = sender_private_key.sign(
-    message,
-    padding.PSS(
-        mgf=padding.MGF1(hashes.SHA256()),
-        salt_length=padding.PSS.MAX_LENGTH
-    ),
-    hashes.SHA256()
-)
-
-with open("encrypted_message.bin", "wb") as f:
-    f.write(encrypted_message)
-
-with open("signature.bin", "wb") as f:
-    f.write(signature)
-
-print("Message encrypted and signed successfully.")`,
-
-`# PRACTICAL 3: RECEIVER DECRYPTION AND VERIFICATION
-
-from cryptography.exceptions import InvalidSignature
-from cryptography.hazmat.primitives import hashes, serialization
-from cryptography.hazmat.primitives.asymmetric import padding
-
-with open("receiver_private_key.pem", "rb") as f:
-    receiver_private_key = serialization.load_pem_private_key(
-        f.read(), password=None
-    )
-
-with open("sender_public_key.pem", "rb") as f:
-    sender_public_key = serialization.load_pem_public_key(f.read())
-
-with open("encrypted_message.bin", "rb") as f:
-    encrypted_message = f.read()
-
-with open("signature.bin", "rb") as f:
-    signature = f.read()
-
-decrypted_bytes = receiver_private_key.decrypt(
-    encrypted_message,
-    padding.OAEP(
-        mgf=padding.MGF1(algorithm=hashes.SHA256()),
-        algorithm=hashes.SHA256(),
-        label=None
-    )
-)
-
-original_message = decrypted_bytes.decode("utf-8")
-print("Decrypted Message:", original_message)
-
-choice = input("Do you want to tamper with the message? (y/n): ").strip().lower()
-
-if choice == "y":
-    altered_text = input("Enter the new/altered message: ")
-    message_to_verify = altered_text.encode("utf-8")
-else:
-    message_to_verify = decrypted_bytes
-
-try:
-    sender_public_key.verify(
-        signature,
-        message_to_verify,
-        padding.PSS(
-            mgf=padding.MGF1(hashes.SHA256()),
-            salt_length=padding.PSS.MAX_LENGTH
-        ),
-        hashes.SHA256()
-    )
-    print("Signature Verified: Message is authentic and untampered!")
-
-except InvalidSignature:
-    print("SECURITY ALERT: Signature Verification Failed!")`,
-];
-
-const practical4Codes = [
-`# PRACTICAL 4: SQL INJECTION AND PREVENTION
-
-import sqlite3
-
-conn = sqlite3.connect("students.db")
-cursor = conn.cursor()
-
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS users (
-    username TEXT,
-    password TEXT
-)
-""")
-
-cursor.execute(
-    "SELECT * FROM users WHERE username=?",
-    ("admin",)
-)
-
-if cursor.fetchone() is None:
-    cursor.execute(
-        "INSERT INTO users VALUES (?, ?)",
-        ("admin", "admin_password")
-    )
-    conn.commit()
-
-username = input("Enter username: ")
-password = input("Enter password: ")
-
-query = "SELECT * FROM users WHERE username=? AND password=?"
-cursor.execute(query, (username, password))
-
-result = cursor.fetchone()
-print(result)
-
-if result:
-    print("Login successful!")
-else:
-    print("Invalid credentials!")
-
-conn.close()`,
-
-`# PRACTICAL 4: PASSWORD HASHING USING BCRYPT
-
-import sqlite3
-import bcrypt
-
-conn = sqlite3.connect("secure_users.db")
-cursor = conn.cursor()
-
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS users (
-    username TEXT,
-    password BLOB
-)
-""")
-
-conn.commit()
-
-username = input("Enter username: ")
-raw_password = input("Enter password: ")
-
-hashed_password = bcrypt.hashpw(
-    raw_password.encode(),
-    bcrypt.gensalt()
-)
-
-cursor.execute(
-    "INSERT INTO users VALUES (?, ?)",
-    (username, hashed_password)
-)
-
-conn.commit()
-
-login_user = input("Username to login: ")
-login_pwd = input("Password to login: ")
-
-cursor.execute(
-    "SELECT password FROM users WHERE username = ?",
-    (login_user,)
-)
-
-data = cursor.fetchone()
-print("Stored Password Hash:", data)
-
-if data and bcrypt.checkpw(login_pwd.encode(), data[0]):
-    print("Login successful!")
-else:
-    print("Login failed!")
-
-conn.close()`,
-
-`# PRACTICAL 4: ROLE-BASED ACCESS CONTROL
-
-import sqlite3
-
-conn = sqlite3.connect("rbac.db")
-cursor = conn.cursor()
-
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS users (
-    username TEXT,
-    password TEXT,
-    role TEXT
-)
-""")
-
-cursor.execute(
-    "INSERT INTO users VALUES ('admin', 'admin_pwd', 'admin')"
-)
-cursor.execute(
-    "INSERT INTO users VALUES ('john', 'john_pwd', 'student')"
-)
-
-conn.commit()
-
-username = input("Enter username: ")
-password = input("Enter password: ")
-
-cursor.execute(
-    "SELECT role FROM users WHERE username = ? AND password = ?",
-    (username, password)
-)
-
-user = cursor.fetchone()
-
-if user:
-    role = user[0]
-    print(f"Login successful! Your role is: {role}")
-
-    if role == "admin":
-        print("Access granted to view, add, delete and modify records.")
-    elif role == "student":
-        print("Access granted to view records.")
-    else:
-        print("Limited access.")
-else:
-    print("Invalid credentials!")
-
-conn.close()`,
-
-`# PRACTICAL 4: ENCRYPTED DATA STORAGE
-
-from cryptography.fernet import Fernet
-
-key = Fernet.generate_key()
-cipher = Fernet(key)
-
-data = "Confidential Information"
-
-encrypted_data = cipher.encrypt(data.encode())
-print("Encrypted data:", encrypted_data)
-
-decrypted_data = cipher.decrypt(encrypted_data).decode()
-print("Decrypted data:", decrypted_data)`,
-];
-
-const practical6Codes = [
-`# PRACTICAL 6: TIME-LIMITED SECURE FILE ACCESS
-
-from flask import Flask, send_file, request, abort
-from datetime import datetime, timedelta
-import secrets
-
-app = Flask(__name__)
-
-TOKENS = {}
-
-@app.route("/generate_link")
-def generate_link():
-    token = secrets.token_urlsafe(16)
-    expiry = datetime.now() + timedelta(seconds=30)
-    TOKENS[token] = expiry
-
-    return f"""
-    Temporary link created. Use it within 30 seconds:<br><br>
-    <a href="/download?token={token}">Download Link</a>
-    """
-
-@app.route("/download")
-def download():
-    token = request.args.get("token")
-
-    if token in TOKENS:
-        if datetime.now() < TOKENS[token]:
-            return send_file("sample.txt", as_attachment=True)
+  {
+    id: 9,
+    title: "Genetic Algorithms – II",
+    category: "Genetic Algorithms",
+    aim: "Implement Tournament Selection and Rank Selection for the target string INDIA.",
+    topics: ["Target INDIA", "Tournament selection", "Rank selection", "Fitness calculation", "Single-point crossover", "Mutation", "Elitism"],
+    install: "pip install matplotlib",
+    code: `import random
+import string
+import matplotlib.pyplot as plt
+
+# Configuration
+TARGET_STRING = "INDIA"
+GENE_POOL = string.ascii_uppercase
+POPULATION_SIZE = 20
+MUTATION_RATE = 0.10
+TOURNAMENT_SIZE = 3
+
+def create_initial_population():
+    population = []
+
+    for _ in range(POPULATION_SIZE):
+        chromosome = ""
+        for _ in range(len(TARGET_STRING)):
+            chromosome += random.choice(GENE_POOL)
+        population.append(chromosome)
+
+    return population
+
+def calculate_fitness(individual):
+    score = 0
+
+    for i in range(len(TARGET_STRING)):
+        if individual[i] == TARGET_STRING[i]:
+            score += 1
+
+    return score
+
+def tournament_selection(population):
+    candidates = random.sample(population, TOURNAMENT_SIZE)
+    return max(candidates, key=calculate_fitness)
+
+def rank_selection(population):
+    sorted_pop = sorted(population, key=calculate_fitness)
+    rank_weights = list(range(1, len(sorted_pop) + 1))
+    parents = random.choices(sorted_pop, weights=rank_weights, k=2)
+    return parents[0], parents[1]
+
+def single_point_crossover(p1, p2):
+    point = random.randint(1, len(TARGET_STRING) - 1)
+    return p1[:point] + p2[point:]
+
+def mutate_child(individual):
+    mutated = ""
+
+    for char in individual:
+        if random.random() < MUTATION_RATE:
+            mutated += random.choice(GENE_POOL)
         else:
-            return "Link expired. Please generate a new one."
+            mutated += char
 
-    abort(403)
+    return mutated
 
-if __name__ == "__main__":
-    app.run(debug=True)`,
+def run_genetic_algorithm(selection_type):
+    population = create_initial_population()
+    gen_count = 1
+    gen_history = []
+    fit_history = []
 
-`# PRACTICAL 6: CLIENT-SIDE ENCRYPTED CLOUD BACKUP
+    print("\\n--- RUNNING", selection_type, "SELECTION ---")
 
-from cryptography.fernet import Fernet
-import os
-import shutil
+    while True:
+        population = sorted(
+            population,
+            key=calculate_fitness,
+            reverse=True
+        )
 
-os.makedirs("cloud_backup", exist_ok=True)
+        best_individual = population[0]
+        best_fitness = calculate_fitness(best_individual)
 
-key = Fernet.generate_key()
-fernet = Fernet(key)
+        gen_history.append(gen_count)
+        fit_history.append(best_fitness)
 
-with open("aes.key", "wb") as kf:
-    kf.write(key)
+        print(
+            f"Gen {gen_count:2d} | Best: '{best_individual}' | "
+            f"Fitness: {best_fitness}/{len(TARGET_STRING)}"
+        )
 
-def encrypt_file(file_path):
-    with open(file_path, "rb") as f:
-        data = f.read()
+        if best_fitness == len(TARGET_STRING):
+            print(f"[{selection_type}] Target reached in Gen {gen_count}")
+            break
 
-    encrypted_data = fernet.encrypt(data)
+        # Elitism
+        new_population = [best_individual]
 
-    encrypted_file_path = "enc_" + os.path.basename(file_path)
+        while len(new_population) < POPULATION_SIZE:
+            if selection_type == "TOURNAMENT":
+                p1 = tournament_selection(population)
+                p2 = tournament_selection(population)
+            else:
+                p1, p2 = rank_selection(population)
 
-    with open(encrypted_file_path, "wb") as ef:
-        ef.write(encrypted_data)
+            child = single_point_crossover(p1, p2)
+            new_population.append(mutate_child(child))
 
-    shutil.copy(
-        encrypted_file_path,
-        os.path.join("cloud_backup", encrypted_file_path)
+        population = new_population
+        gen_count += 1
+
+    plt.plot(gen_history, fit_history, marker="o", label=selection_type)
+    return gen_count
+
+# Run both selection methods
+tournament_generations = run_genetic_algorithm("TOURNAMENT")
+rank_generations = run_genetic_algorithm("RANK")
+
+plt.xlabel("Generation")
+plt.ylabel("Best Fitness")
+plt.title("Tournament vs Rank Selection")
+plt.legend()
+plt.grid(True)
+plt.show()`,
+    note: "The journal's GA-II code uses a loop until the target is reached and compares Tournament and Rank selection. No maximum-generation limit is shown in that source."
+  },
+  {
+    id: 11,
+    title: "Particle Swarm Optimization",
+    category: "Swarm Intelligence",
+    aim: "Implement Particle Swarm Optimization using particles, velocity, personal best and global best to find a target position.",
+    topics: ["Particle", "Position", "Velocity", "Personal best (pbest)", "Global best (gbest)", "Inertia weight", "Cognitive and social constants"],
+    install: "No external package required (Python standard library)",
+    code: `import random
+
+class Particle:
+    def __init__(self, position):
+        self.position = position
+        self.velocity = 0
+        self.pbest_pos = position
+        self.pbest_fit = float("inf")
+
+    def update_fitness(self, fitness_func):
+        current_fit = fitness_func(self.position)
+
+        if current_fit < self.pbest_fit:
+            self.pbest_fit = current_fit
+            self.pbest_pos = self.position
+
+        return self.pbest_fit
+
+
+class PSO:
+    def __init__(self, food_pos, start_positions, w=0.5, c1=1.5, c2=1.5):
+        self.food_pos = food_pos
+        self.w = w
+        self.c1 = c1
+        self.c2 = c2
+        self.particles = [Particle(p) for p in start_positions]
+        self.gbest_pos = random.choice(start_positions)
+        self.gbest_fit = float("inf")
+        self.bounds = (1, 20)
+
+    def fitness(self, x):
+        return abs(x - self.food_pos)
+
+    def run(self, max_iterations=100, tolerance=0.01):
+        for iteration in range(max_iterations):
+
+            # Update Fitness and Global Best
+            for p in self.particles:
+                fit = p.update_fitness(self.fitness)
+
+                if fit < self.gbest_fit:
+                    self.gbest_fit = fit
+                    self.gbest_pos = p.pbest_pos
+
+            # Termination Condition
+            if self.gbest_fit <= tolerance:
+                return iteration + 1, True
+
+            # Update Velocity and Position
+            for p in self.particles:
+                r1, r2 = random.random(), random.random()
+
+                cognitive = self.c1 * r1 * (p.pbest_pos - p.position)
+                social = self.c2 * r2 * (self.gbest_pos - p.position)
+
+                p.velocity = (self.w * p.velocity) + cognitive + social
+                p.position += p.velocity
+
+                # Boundary Control
+                p.position = max(
+                    self.bounds[0],
+                    min(self.bounds[1], p.position)
+                )
+
+        return max_iterations, False
+
+
+# Execution
+FOOD_LOCATION = random.randint(1, 20)
+START_POSITIONS = [1, 4, 10, 15]
+
+optimizer = PSO(
+    food_pos=FOOD_LOCATION,
+    start_positions=START_POSITIONS
+)
+
+iterations, found = optimizer.run()
+
+print("Food Location:", FOOD_LOCATION)
+print("Best Position:", optimizer.gbest_pos)
+print("Best Fitness:", optimizer.gbest_fit)
+print("Iterations:", iterations)
+print("Target Found:", found)`
+  },
+  {
+    id: 12,
+    title: "Ant Colony Optimization",
+    category: "Swarm Intelligence",
+    aim: "Implement Ant Colony Optimization to find a short route in a travelling-salesperson-style problem.",
+    topics: ["Artificial ants", "Pheromone trails", "Distance matrix", "Heuristic information", "Pheromone evaporation", "Route length"],
+    install: "pip install numpy",
+    code: `import numpy as np
+import random
+
+distance = np.array([
+    [0, 2, 5, 7, 6],
+    [2, 0, 4, 6, 3],
+    [5, 4, 0, 3, 5],
+    [7, 6, 3, 0, 4],
+    [6, 3, 5, 4, 0]
+], dtype=float)
+
+n_cities = len(distance)
+n_ants = 10
+iterations = 50
+alpha = 1.0
+beta = 2.0
+rho = 0.5
+Q = 100.0
+
+pheromone = np.ones((n_cities, n_cities))
+
+def choose_next_city(current, unvisited):
+    scores = []
+
+    for city in unvisited:
+        tau = pheromone[current][city] ** alpha
+        eta = (1.0 / distance[current][city]) ** beta
+        scores.append(tau * eta)
+
+    scores = np.array(scores)
+    scores /= scores.sum()
+
+    return random.choices(list(unvisited), weights=scores, k=1)[0]
+
+def route_length(route):
+    length = sum(
+        distance[route[i]][route[i + 1]]
+        for i in range(len(route) - 1)
     )
+    length += distance[route[-1]][route[0]]
+    return length
 
-    print(f"Encrypted and uploaded: {encrypted_file_path}")
+best_route = None
+best_length = float("inf")
 
-if __name__ == "__main__":
-    input_file = "sample_file.txt"
+for iteration in range(iterations):
+    routes = []
 
-    if not os.path.exists(input_file):
-        with open(input_file, "w") as f:
-            f.write("Confidential Cloud Backup File")
+    for ant in range(n_ants):
+        start = random.randrange(n_cities)
+        route = [start]
+        unvisited = set(range(n_cities))
+        unvisited.remove(start)
 
-    encrypt_file(input_file)`,
+        while unvisited:
+            city = choose_next_city(route[-1], unvisited)
+            route.append(city)
+            unvisited.remove(city)
 
-`# PRACTICAL 6: INTRUSION DETECTION SYSTEM FOR CLOUD LOGS
+        length = route_length(route)
+        routes.append((route, length))
 
-import json
-from datetime import datetime
+        if length < best_length:
+            best_length = length
+            best_route = route.copy()
 
-blacklisted_ips = ["192.168.1.10", "10.0.0.5"]
+    # Pheromone evaporation
+    pheromone *= (1 - rho)
 
-with open("access_logs.json") as f:
-    logs = json.load(f)
+    # Pheromone deposit
+    for route, length in routes:
+        deposit = Q / length
 
-failed_attempts = {}
+        for i in range(n_cities - 1):
+            a, b = route[i], route[i + 1]
+            pheromone[a][b] += deposit
+            pheromone[b][a] += deposit
 
-print("\\nIntrusion Detection Log Analysis:\\n")
+        a, b = route[-1], route[0]
+        pheromone[a][b] += deposit
+        pheromone[b][a] += deposit
 
-for entry in logs:
-    user = entry["user"]
-    ip = entry["ip"]
-    time = datetime.strptime(
-        entry["timestamp"], "%Y-%m-%d %H:%M:%S"
-    )
-    status = entry["status"]
-
-    if ip in blacklisted_ips:
-        print(f"ALERT: Access from blacklisted IP {ip} by user '{user}'")
-
-    if not (8 <= time.hour <= 18):
-        print(f"Off-hour login attempt by '{user}' at {time.strftime('%H:%M')}")
-
-    if status == "failed":
-        failed_attempts[user] = failed_attempts.get(user, 0) + 1
-
-        if failed_attempts[user] >= 2:
-            print(f"User '{user}' has {failed_attempts[user]} failed login attempts!")
-
-print("\\nLog scan completed.\\n")`,
-
-`# PRACTICAL 6: INVISIBLE WATERMARKING
-
-import hashlib
-import os
-import shutil
-
-os.makedirs("cloud_upload", exist_ok=True)
-
-def watermark_text(file_path, user_id):
-    with open(file_path, "r") as f:
-        content = f.read()
-
-    watermark = (
-        f"\\n<!--USER-ID: "
-        f"{hashlib.sha256(user_id.encode()).hexdigest()}-->"
-    )
-
-    watermarked_file = "wm_" + os.path.basename(file_path)
-
-    with open(watermarked_file, "w") as f:
-        f.write(content + watermark)
-
-    cloud_path = os.path.join("cloud_upload", watermarked_file)
-    shutil.copy(watermarked_file, cloud_path)
-
-    print(f"File watermarked and uploaded to: {cloud_path}")
-
-if __name__ == "__main__":
-    input_file = "sample_file.txt"
-
-    if not os.path.exists(input_file):
-        with open(input_file, "w") as f:
-            f.write("This is confidential content for cloud storage.")
-
-    watermark_text(input_file, user_id="user123")`,
+print("Best Route:", best_route)
+print("Best Route Length:", best_length)`
+  }
 ];
 
-const practical7Codes = [
-`# PRACTICAL 7: AES ENCRYPTION FOR IoT SENSOR DATA
-
-from Crypto.Cipher import AES
-import base64
-
-key = b"ThisIsA16ByteKey"
-
-cipher = AES.new(key, AES.MODE_EAX)
-
-sensor_data = "Temperature: 28C"
-
-ciphertext, tag = cipher.encrypt_and_digest(sensor_data.encode())
-nonce = cipher.nonce
-
-print("Encrypted Data:", base64.b64encode(ciphertext).decode())
-
-cipher_dec = AES.new(key, AES.MODE_EAX, nonce=nonce)
-
-decrypted_data = cipher_dec.decrypt_and_verify(ciphertext, tag).decode()
-
-print("Decrypted Data:", decrypted_data)`,
-
-`# PRACTICAL 7: HMAC FOR DATA INTEGRITY
-
-import hmac
-import hashlib
-
-secret_key = b"iot_secret_key"
-
-message = b"Humidity: 70%"
-
-hmac_digest = hmac.new(
-    secret_key,
-    message,
-    hashlib.sha256
-).hexdigest()
-
-print("Message:", message.decode())
-print("Generated HMAC:", hmac_digest)
-
-received_hmac = hmac.new(
-    secret_key,
-    message,
-    hashlib.sha256
-).hexdigest()
-
-if hmac.compare_digest(hmac_digest, received_hmac):
-    print("Message is authentic")
-else:
-    print("Message tampered!")`,
-
-`# PRACTICAL 7: MQTT COMMUNICATION WITH TLS SECURITY
-
-import paho.mqtt.client as mqtt
-
-def on_connect(client, userdata, flags, rc):
-    print("Connected with result code " + str(rc))
-    client.subscribe("iot/device1")
-
-def on_message(client, userdata, msg):
-    print("Received:", msg.topic, msg.payload.decode())
-
-client = mqtt.Client()
-
-client.on_connect = on_connect
-client.on_message = on_message
-
-client.tls_set()
-
-client.connect("test.mosquitto.org", 8883, 60)
-
-client.loop_start()
-
-client.publish("iot/device1", "Secure Temperature Data: 25C")`,
-
-`# PRACTICAL 7: PACKET SNIFFING IN IoT TRAFFIC
-
-from scapy.all import sniff
-
-def packet_callback(packet):
-    if packet.haslayer("IP"):
-        src = packet["IP"].src
-        dst = packet["IP"].dst
-
-        print(f"[IP Packet] {src} -> {dst}")
-
-    if packet.haslayer("Raw"):
-        payload = packet["Raw"].load
-        print("Payload:", payload)
-
-print("Sniffing IoT traffic... Press Ctrl+C to stop")
-
-sniff(prn=packet_callback, count=10)`,
-];
-
-const practical8Codes = [
-`# PRACTICAL 8: TOY HASH COLLISION DEMONSTRATION
-
-def toy_hash(b: bytes) -> int:
-    return sum(b) % 256
-
-def make_base_certs():
-    cert1_txt = \`-----BEGIN CERTIFICATE-----
-Subject: CN=Alice Example
-Issuer: Test CA
-PublicKey: AAAAB3NzaC1yc2EAAAADAQABAAABAQCu
------END CERTIFICATE-----
-\`
-
-    cert2_txt = \`-----BEGIN CERTIFICATE-----
-Subject: CN=Bob Example
-Issuer: Test CA
-PublicKey: AAAAB3NzaC1yc2EAAAADAQABAAABAQCu
------END CERTIFICATE-----
-\`
-
-    return cert1_txt.encode("utf-8"), cert2_txt.encode("utf-8")
-
-def pad_to_match(hash_target, current_bytes, prefix=b""):
-    cur = (sum(current_bytes) + sum(prefix)) % 256
-    needed = (hash_target - cur) % 256
-
-    if needed == 0:
-        return b""
-
-    return bytes([needed])
-
-def main():
-    cert1, cert2 = make_base_certs()
-
-    h1 = toy_hash(cert1)
-    h2 = toy_hash(cert2)
-
-    print("Initial toy hashes:")
-    print("cert1 hash:", h1)
-    print("cert2 hash:", h2)
-
-    prefix = b"\\n#PAD:"
-    padding = pad_to_match(h1, cert2, prefix)
-
-    cert2_padded = cert2 + prefix + padding
-
-    print("\\nAfter padding cert2:")
-    print("cert1 length:", len(cert1), "hash:", toy_hash(cert1))
-    print("cert2 length:", len(cert2_padded), "hash:", toy_hash(cert2_padded))
-
-    print("Are bytes identical?:", cert1 == cert2_padded)
-    print("Do they collide under toy_hash?:", toy_hash(cert1) == toy_hash(cert2_padded))
-
-    with open("cert1_demo.pem", "wb") as f:
-        f.write(cert1)
-
-    with open("cert2_demo_padded.pem", "wb") as f:
-        f.write(cert2_padded)
-
-    print("Files created successfully!")
-    print("Files differ, but toy_hash is the same.")
-
-if __name__ == "__main__":
-    main()`,
-
-`# PRACTICAL 8: SHA-256 HASH AND AVALANCHE EFFECT
-
-import hashlib
-
-message = b"Hello Security Students"
-
-hash_digest = hashlib.sha256(message).hexdigest()
-
-print("SHA-256 Hash:", hash_digest)
-
-message2 = b"hello Security Students"
-
-print(
-    "Changed message hash:",
-    hashlib.sha256(message2).hexdigest()
-)`,
-
-`# PRACTICAL 8: MAC / HMAC EXAMPLE
-
-import hmac
-import hashlib
-
-secret_key = b"shared_secret"
-
-message = b"Important Transaction: $500"
-
-mac = hmac.new(
-    secret_key,
-    message,
-    hashlib.sha256
-).hexdigest()
-
-print("Message:", message.decode())
-print("HMAC-SHA256:", mac)`,
-
-`# PRACTICAL 8: ANOTHER HMAC EXAMPLE
-
-import hmac
-import hashlib
-
-key = b"super_secret_key"
-
-msg = b"Authenticate this message"
-
-hmac_digest = hmac.new(
-    key,
-    msg,
-    hashlib.sha256
-).hexdigest()
-
-print("HMAC:", hmac_digest)`,
-];
-
-function App() {
+export default function App() {
   const [expanded, setExpanded] = useState(null);
-  const [copied, setCopied] = useState("");
   const [search, setSearch] = useState("");
+  const [copied, setCopied] = useState(null);
 
-  const togglePractical = (id) => {
-    setExpanded(expanded === id ? null : id);
-  };
-
-  const copyCode = async (code, name) => {
-    try {
-      await navigator.clipboard.writeText(code);
-      setCopied(name);
-      setTimeout(() => setCopied(""), 2000);
-    } catch (error) {
-      alert("Unable to copy. Please copy the code manually.");
-    }
-  };
-
-  // Filter practicals based on search
   const filteredPracticals = useMemo(() => {
     const query = search.trim().toLowerCase();
-
     if (!query) return practicals;
-
-    return practicals
-      .map((practical) => {
-        const titleMatches = practical.title.toLowerCase().includes(query);
-
-        const matchingTopics = practical.topics
-          .map((topic, index) => ({
-            topic,
-            index,
-          }))
-          .filter(({ topic }) =>
-            topic.toLowerCase().includes(query)
-          );
-
-        if (titleMatches) {
-          return practical;
-        }
-
-        if (matchingTopics.length > 0) {
-          return {
-            ...practical,
-            topics: matchingTopics.map(({ topic }) => topic),
-            originalIndexes: matchingTopics.map(({ index }) => index),
-          };
-        }
-
-        return null;
-      })
-      .filter(Boolean);
+    return practicals.filter((p) =>
+      [p.title, p.category, p.aim, ...p.topics].join(" ").toLowerCase().includes(query)
+    );
   }, [search]);
+
+  const copyCode = async (id, code) => {
+    try {
+      await navigator.clipboard.writeText(code);
+      setCopied(id);
+    } catch {
+      setCopied("error-" + id);
+    }
+    window.setTimeout(() => setCopied(null), 1800);
+  };
 
   return (
     <div className="app">
       <header className="header">
-        <h1>Fy Physics</h1>
-        <p>Google form</p>
+        <h1>Machine Learning Practical Library</h1>
+        <p>MSc Computer Science · Semester I</p>
+        <p>Practical aims, important topics, installation commands and Python programs.</p>
       </header>
 
       <main className="container">
-        <h2>Neurology</h2>
-
-        {/* Search Bar */}
+        <h2>Machine Learning Practicals</h2>
         <div className="search-container">
           <input
-            type="text"
-            placeholder="🔍 Search practicals, topics or programs..."
-            value={search}
-            onChange={(e) => {
-              setSearch(e.target.value);
-              setExpanded(null);
-            }}
             className="search-input"
+            type="text"
+            placeholder="Search practical, topic or algorithm..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
           />
-
           {search && (
-            <button
-              className="clear-search"
-              onClick={() => setSearch("")}
-            >
-              ✕
-            </button>
+            <button className="clear-search" onClick={() => setSearch("")} aria-label="Clear search">×</button>
           )}
         </div>
 
-        {/* Practical Cards */}
-        {filteredPracticals.length > 0 ? (
-          filteredPracticals.map((practical) => {
-            const isExpanded =
-              search.trim() !== "" ||
-              expanded === practical.id;
-
-            return (
-              <div className="practical-card" key={practical.id}>
-                <div
-                  className="practical-header"
-                  onClick={() => togglePractical(practical.id)}
-                >
-                  <h3>{practical.title}</h3>
-                  <span>{isExpanded ? "−" : "+"}</span>
-                </div>
-
-                {isExpanded && (
-                  <div className="topics">
-                    {practical.topics.map((topic, index) => {
-                      const originalIndex =
-                        practical.originalIndexes
-                          ? practical.originalIndexes[index]
-                          : index;
-
-                      let code = `# ${topic}\n\n# Code will be added here.`;
-
-                      if (practical.id === 1) code = practical1Codes[originalIndex];
-                      if (practical.id === 2) code = practical2Codes[originalIndex];
-                      if (practical.id === 3) code = practical3Codes[originalIndex];
-                      if (practical.id === 4) code = practical4Codes[originalIndex];
-                      if (practical.id === 6) code = practical6Codes[originalIndex];
-                      if (practical.id === 7) code = practical7Codes[originalIndex];
-                      if (practical.id === 8) code = practical8Codes[originalIndex];
-
-                      const buttonName = `${practical.id}-${originalIndex}`;
-
-                      return (
-                        <div className="topic-card" key={originalIndex}>
-                          <h4>
-                            {originalIndex + 1}. {topic}
-                          </h4>
-
-                          <button
-                            className="copy-btn"
-                            onClick={() => copyCode(code, buttonName)}
-                          >
-                            {copied === buttonName
-                              ? "Copied!"
-                              : "Copy Code"}
-                          </button>
-
-                          <pre>
-                            <code>{code}</code>
-                          </pre>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-            );
-          })
-        ) : (
+        {filteredPracticals.length === 0 ? (
           <div className="no-results">
-            <h3>No results found</h3>
-            <p>Try searching for another practical or topic.</p>
+            <h3>No practical found</h3>
+            <p>Try another practical name or topic.</p>
           </div>
-        )}
+        ) : filteredPracticals.map((practical) => (
+          <section className="practical-card" key={practical.id}>
+            <div
+              className="practical-header"
+              role="button"
+              tabIndex={0}
+              aria-expanded={expanded === practical.id}
+              onClick={() => setExpanded(expanded === practical.id ? null : practical.id)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  setExpanded(expanded === practical.id ? null : practical.id);
+                }
+              }}
+            >
+              <div>
+                <h3>Practical {practical.id} – {practical.title}</h3>
+                <small>{practical.category}</small>
+              </div>
+              <span>{expanded === practical.id ? "−" : "+"}</span>
+            </div>
+
+            {expanded === practical.id && (
+              <div className="topics">
+                <div className="topic-card">
+                  <h4>Aim: {practical.aim}</h4>
+                  <h4>Topics: {practical.topics.join(" · ")}</h4>
+                  {practical.install && <h4>Installation: <code>{practical.install}</code></h4>}
+                  {practical.note && <h4>{practical.note}</h4>}
+                  <h4>Python Code</h4>
+                  <button
+                    className="copy-btn"
+                    type="button"
+                    onClick={() => copyCode(practical.id, practical.code)}
+                  >
+                    {copied === practical.id ? "Copied!" : copied === "error-" + practical.id ? "Copy failed" : "Copy Code"}
+                  </button>
+                  <pre><code>{practical.code}</code></pre>
+                </div>
+              </div>
+            )}
+          </section>
+        ))}
       </main>
 
-      <footer>
-        <p>Student data</p>
-      </footer>
+      <footer>Machine Learning Practical Library · MSc Computer Science</footer>
     </div>
   );
 }
-
-export default App; 
